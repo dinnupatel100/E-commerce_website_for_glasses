@@ -4,6 +4,7 @@ class CategoriesController < ApplicationController
 
   def index
     @categories =  Category.all
+    render json: @categories
   end
 
   def add_category
@@ -16,8 +17,12 @@ class CategoriesController < ApplicationController
   end
 
   def show_category_products
-    @category_products =  @category.product_details
-    render json: @category_products   
+    if @category == nil
+      render json: "No category found"
+    else
+      @category_products =  @category.product_details
+      render json: @category_products 
+    end
   end
 
   def destroy 

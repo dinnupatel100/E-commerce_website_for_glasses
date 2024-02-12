@@ -1,17 +1,29 @@
 class ProductColorsController < ApplicationController
-  before_action :set_product_color#, only: [:]
+  load_and_authorize_resource
+  before_action :set_product_color, only: [:destroy]
 
   def index
     render json: ProductColor.all
   end
 
   def create
-    product_color = ProductColor.new(product_color_params)
-    if product_color.save
-      render json: product_color, status: :created
+    product = ProductColor.find_by(color: params[:product_color][:color], product_detail_id: params[:id])
+    if product == nil
+      product_color = ProductColor.new(product_color_params.merge(product_detail_id: params[:id]))
+      if product_color.save
+        render json: product_color, status: :created
+      else
+        render json: product_color.errors.full_messages
+      end
     else
-      render json: product_color.errors.full_messages
+      render json: "Color #{params[:product_color][:color]} already added"
     end
+  end
+
+
+  def destroy
+    @product_color.destroy
+    render json: "Product color deleted successfully"
   end
 
   def product_color_info
@@ -22,7 +34,7 @@ class ProductColorsController < ApplicationController
   private
 
   def product_color_params
-    params.require(:product_color).permit(:color, :images, :product_detail_id)
+    params.require(:product_color).permit(:color, :images)
   end
 
   def set_product_color

@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::API
   before_action :authorized
+  rescue_from CanCan::AccessDenied, with: :handle_authorization
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def encode_token(payload)
     JWT.encode(payload,Rails.application.credentials.secret_key_base)
@@ -30,4 +32,12 @@ class ApplicationController < ActionController::API
     end
   end
 
+  private
+  def handle_authorization
+    render json: { message: "You don't have access"}, status: :unauthorized
+  end
+
+  def record_not_found()
+    render json: "Record not found"
+  end
 end

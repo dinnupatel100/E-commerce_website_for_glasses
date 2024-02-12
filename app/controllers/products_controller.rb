@@ -1,4 +1,6 @@
 class ProductsController < ApplicationController
+  load_and_authorize_resource
+  before_action :set_product_size, only: [:destroy]
 
   def index
     @products = Product.all
@@ -6,7 +8,7 @@ class ProductsController < ApplicationController
   end
 
   def create
-    product_size = Product.new(product_size_params)
+    product_size = Product.new(product_size_params.merge(product_color_id: params[:id]))
     if product_size.save
       render json: product_size, status: :created
     else
@@ -14,11 +16,15 @@ class ProductsController < ApplicationController
     end
   end
 
+  def destroy
+      @product_size.destroy
+      render json: "Product size deleted successfully"
+  end
 
   private
   
   def product_size_params
-    params.require(:product).permit(:size, :quantity, :product_color_id)
+    params.require(:product_size).permit(:size, :quantity)
   end
 
   def set_product_size

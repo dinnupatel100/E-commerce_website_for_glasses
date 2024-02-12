@@ -1,15 +1,28 @@
 class User < ApplicationRecord
-  after_validation :lowercase_name
   has_secure_password
+  #after_validation :lowercase_details
   has_many :reviews, dependent: :destroy
   has_many :orders, dependent: :destroy
 
-  validates :first_name, presence: true
+  
+  enum role: {
+    customer:"customer",
+    admin:"admin"
+  }
 
-  private 
+  validates :first_name, :email, :dob, :mobile_no, :address, :city, :postal_code, presence: true
+  validates :email, uniqueness: { case_sensitive: false }
+  validates :postal_code, numericality: true
+  validates :mobile_no, uniqueness: true, length: { minimum:10, maximum:15 }
+  validates :password, presence: true, length: {within: 6..15}, on: :create
 
-  def lowercase_name
+  private
+
+  def lowercase_details
     first_name.downcase!
-    # email.downcase!
+    email.downcase!
+    address.downcase!
+    city.downcase!
   end
+
 end
