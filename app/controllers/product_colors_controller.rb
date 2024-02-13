@@ -1,14 +1,9 @@
 class ProductColorsController < ApplicationController
-  load_and_authorize_resource
   before_action :set_product_color, only: [:destroy]
-
-  def index
-    render json: ProductColor.all
-  end
 
   def create
     product = ProductColor.find_by(color: params[:product_color][:color], product_detail_id: params[:id])
-    if product == nil
+    if product.nil?
       product_color = ProductColor.new(product_color_params.merge(product_detail_id: params[:id]))
       if product_color.save
         render json: product_color, status: :created

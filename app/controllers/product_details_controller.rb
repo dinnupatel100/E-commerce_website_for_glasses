@@ -1,5 +1,4 @@
 class ProductDetailsController < ApplicationController
-  load_and_authorize_resource 
   before_action :set_product_detail, only: [:image_of_product, :show, :destroy]
 
   def index

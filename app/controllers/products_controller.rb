@@ -1,5 +1,4 @@
 class ProductsController < ApplicationController
-  load_and_authorize_resource
   before_action :set_product_size, only: [:destroy]
 
   def index

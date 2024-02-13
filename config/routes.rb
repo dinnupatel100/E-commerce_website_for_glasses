@@ -27,7 +27,6 @@ Rails.application.routes.draw do
   delete 'product/:id', to: 'product_details#destroy'
 
   #Product Colors routes
-  get 'product/product-color/data', to: 'product_colors#index'
   post 'product/:id/product-color/add-color', to: 'product_colors#create'
   delete 'product/product-color/:id', to: 'product_colors#destroy'
 

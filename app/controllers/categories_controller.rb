@@ -1,7 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:destroy, :update, :show_category_products]
-  load_and_authorize_resource
-
+  
   def index
     @categories =  Category.all
     render json: @categories

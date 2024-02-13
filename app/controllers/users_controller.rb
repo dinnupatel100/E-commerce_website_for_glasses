@@ -2,11 +2,10 @@ class UsersController < ApplicationController
   skip_before_action :authorized, only: [:create, :login]
   before_action :set_users, only: [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  load_and_authorize_resource
 
   def index
     @users =  User.all
-    render json: @users
+      render json: @users , status: :ok
   end
 
   def show
@@ -14,14 +13,16 @@ class UsersController < ApplicationController
   end
 
   def update
-    
-    if @user.update(user_params)
+    if @user.nil?
+      render json: {
+        message: "Failed to update user"
+      },status: :not_found
+    else
+      @user.update(user_params)
       render json: {
         message: "User Updated Successfully",
         user: @user
-      }
-    else
-      render json: "Failed to update user"
+      }, status: :ok
     end
   end
 
@@ -33,7 +34,7 @@ class UsersController < ApplicationController
         user: UserSerializer.new(user)
       },status: :created
     else
-      render json: user.errors.full_messages
+      render json: user.errors.full_messages, status: :bad_request
     end
   end
 
@@ -74,8 +75,8 @@ class UsersController < ApplicationController
     @user = User.find_by(id: params[:id])
   end
 
-  def record_not_found(e)
-    render json: { error: e.record.errors.full_messages}, status: :unauthorized
+  def record_not_found()
+    render json: "Record not found", status: :unauthorized
   end
 
 end

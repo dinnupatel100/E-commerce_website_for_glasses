@@ -63,3 +63,5 @@ group :development do
 end
 
 gem 'faker'
+
+gem 'simplecov', require: false, group: :test
