@@ -9,23 +9,20 @@ class Ability
 
     if user.admin?
       can :manage, Category
-      can :destroy, User
-      can :read, User
-      can :read, Order
+      can [:read,:destroy], User
       can :manage, ProductDetail
       can :manage, ProductColor
       can :manage, Product
+      can [:read, :show_all_orders], Order
     else 
-      can :read, Category
-      can :show_category_products, Category
-      can :create, User
-      can :update, User
+      can [:read,:show_category_products], Category
+      can [:create,:update], User
       can :manage, Order
-      cannot :index, Order
-      can :search_result, ProductDetail
-      can :read, ProductDetail
+      cannot [:index, :show_all_orders], Order
+      can [:read,:search_result], ProductDetail
       can :read, ProductColor
       can :read, Product
+      can :manage, Review
     end
     
   end

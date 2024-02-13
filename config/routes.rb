@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   get "order/place-order/", to: 'orders#order_placed'
   get "order/remove-product", to: 'orders#remove_product_from_cart'
   get "order/remove-all-products", to: 'orders#remove_all_products_from_cart'
-
+  get "order/all-orders", to: 'orders#show_all_orders'
   #Orders_Product routes
   get 'orders_product/data', to: "orders_products#index"
 

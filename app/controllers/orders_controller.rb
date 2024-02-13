@@ -6,10 +6,9 @@ class OrdersController < ApplicationController
     render json: @order
   end
 
-  def show_all_orders
-    
-  end
 
+
+  
   def add_to_cart
     order_id = find_order_id
     if order_id == nil
