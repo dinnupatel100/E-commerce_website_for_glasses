@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
-  #after_validation :lowercase_details
+  before_save :lowercase_details
   has_many :reviews, dependent: :destroy
   has_many :orders, dependent: :destroy
 
@@ -20,11 +20,11 @@ class User < ApplicationRecord
 
   private
 
-  # def lowercase_details
-  #   first_name.downcase!
-  #   email.downcase!
-  #   address.downcase!
-  #   city.downcase!
-  # end
+  def lowercase_details
+    first_name.downcase!
+    email.downcase!
+    address.downcase!
+    city.downcase!
+  end
 
 end

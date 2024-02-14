@@ -6,9 +6,7 @@ class ProductColor < ApplicationRecord
   validates :color, presence: true
 
   private
-
   def lowecase_color
     color.downcase!
   end
-  
 end

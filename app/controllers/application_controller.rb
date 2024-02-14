@@ -39,7 +39,7 @@ class ApplicationController < ActionController::API
     render json: { message: "You don't have access"}, status: :unauthorized
   end
 
-  def record_not_found()
-    render json: "Record not found"
+  def record_not_found
+    render json: "Record not found", status: :not_found
   end
 end

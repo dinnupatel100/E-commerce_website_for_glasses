@@ -1,23 +1,22 @@
 class ProductsController < ApplicationController
   before_action :set_product_size, only: [:destroy]
 
-  def index
-    @products = Product.all
-    render json: @products
-  end
-
   def create
     product_size = Product.new(product_size_params.merge(product_color_id: params[:id]))
     if product_size.save
       render json: product_size, status: :created
     else
-      render json: product_size.errors.full_messages
+      render json: product_size.errors.full_messages, status: :bad_request
     end
   end
 
   def destroy
+    if @product_size.nil?
+      render json: "Product id doesn't exist", status: :bad_request
+    else
       @product_size.destroy
-      render json: "Product size deleted successfully"
+      render json: "Product size deleted successfully", status: :ok
+    end
   end
 
   private

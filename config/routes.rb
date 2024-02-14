@@ -31,7 +31,6 @@ Rails.application.routes.draw do
   delete 'product/product-color/:id', to: 'product_colors#destroy'
 
   #Product size routes
-  get 'product/product-color/product-size/data', to: 'products#index'
   post 'product/product-color/:id/product-size/add-size', to: 'products#create'
   delete 'product/product-color/product-size/:id', to: 'products#destroy'
 
@@ -44,9 +43,8 @@ Rails.application.routes.draw do
   post 'order/add-to-cart', to: 'orders#add_to_cart'
   get 'order/view-cart', to: 'orders#view_cart'
   get "order/place-order/", to: 'orders#order_placed'
-  get "order/remove-product", to: 'orders#remove_product_from_cart'
-  get "order/remove-all-products", to: 'orders#remove_all_products_from_cart'
-  get "order/all-orders", to: 'orders#show_all_orders'
+  get "order/product/:id/remove-product", to: 'orders#remove_product_from_cart'
+  
   #Orders_Product routes
   get 'orders_product/data', to: "orders_products#index"
 

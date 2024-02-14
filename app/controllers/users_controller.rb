@@ -1,22 +1,27 @@
 class UsersController < ApplicationController
   skip_before_action :authorized, only: [:create, :login]
   before_action :set_users, only: [:show, :update, :destroy]
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     @users =  User.all
+    if @users.empty?
+      render json: "no user found", status: :not_found
+    else
       render json: @users , status: :ok
+    end
   end
 
   def show
-    render json: @user
+    if @user.nil?
+      render json: "no data", status: :ok
+    else
+      render json: @user, status: :ok
+    end
   end
 
   def update
     if @user.nil?
-      render json: {
-        message: "Failed to update user"
-      },status: :not_found
+      render json: { message: "Failed to update user"}, status: :not_found
     else
       @user.update(user_params)
       render json: {
@@ -39,11 +44,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
-    if @user.destroyed?
-      render json: "User Deleted Successfully"
+    if @user.nil?
+      render json: "Failed to delete user", status: :bad_request
     else
-      render json: "Failed to delete user"
+      @user.destroy
+      render json: "User Deleted Successfully", status: :ok
     end
   end
 
@@ -73,10 +78,6 @@ class UsersController < ApplicationController
 
   def set_users
     @user = User.find_by(id: params[:id])
-  end
-
-  def record_not_found()
-    render json: "Record not found", status: :unauthorized
   end
 
 end

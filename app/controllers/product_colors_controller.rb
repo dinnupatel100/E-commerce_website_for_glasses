@@ -8,22 +8,29 @@ class ProductColorsController < ApplicationController
       if product_color.save
         render json: product_color, status: :created
       else
-        render json: product_color.errors.full_messages
+        render json: product_color.errors.full_messages, status: :bad_request
       end
     else
-      render json: "Color #{params[:product_color][:color]} already added"
+      render json: "Color #{params[:product_color][:color]} already added", status: :found
     end
   end
 
-
   def destroy
-    @product_color.destroy
-    render json: "Product color deleted successfully"
+    if @product_color.nil?
+      render json: "Product color doesn't exist", status: :not_found
+    else
+      @product_color.destroy
+      render json: "Product color deleted successfully", status: :ok
+    end
   end
 
   def product_color_info
-    @product_size = @product_color.products.pluck(:size)
-    @product_quantity = @product_color.products.pluck(:quantity)
+    if product_color.nil?
+      render json: "Product color doesn't exist", status: :not_found
+    else
+      @product_size = @product_color.products
+      render json: @product_size, status: :ok
+    end
   end
 
   private

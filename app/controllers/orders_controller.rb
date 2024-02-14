@@ -2,15 +2,15 @@ class OrdersController < ApplicationController
 
   def index
     @order = Order.all
-    render json: @order
+    if @order.empty?
+      render json: "Order doesn't exist", status: :not_found
+    else
+      render json: @order, status: :ok
   end
 
-
-
-  
   def add_to_cart
     order_id = find_order_id
-    if order_id == nil
+    if order_id.nil?
       Order.create(user_id: current_user.id , order_status: "cart", total_bill: 0.0)
       order_id = find_order_id
     end
@@ -20,8 +20,8 @@ class OrdersController < ApplicationController
 
   def view_cart
     order_id = find_order_id
-    if order_id == nil
-      render json: {message: "Cart is empty. Please add the product"}
+    if order_id.nil?
+      render json: {message: "Cart is empty. Please add the product"}, status: :not_found
     else
       cart_products_details(order_id)
     end
@@ -33,16 +33,10 @@ class OrdersController < ApplicationController
     render json: "Product removed successfully"
   end
 
-  def remove_all_products_from_cart
-    order = Order.find_by(user_id: current_user.id, order_status: "cart")
-    order.orders_products.destroy
-    render json: "All products removed successfully"
-  end
-
   def order_placed
     order = Order.find_by(user_id: current_user.id, order_status: "cart")
-    if order == nil
-      render json: { message: "You have nothing in your cart to order" }
+    if order.nil?
+      render json: { message: "You have nothing in your cart to order" }, status: :not_found
     else
       order.orders_products.each do |orders_product|
         ordered_quantity = orders_product.quantity
@@ -50,14 +44,14 @@ class OrdersController < ApplicationController
         if ordered_quantity > available_quantity 
           render json: { 
             message: "Product #{orders_product.product.product_color.product_detail.product_name} is not available"
-          }
+          }, status: :not_found
         end
         Product.update(orders_product.product_id, quantity: available_quantity-ordered_quantity)
         price = orders_product.product.product_color.product_detail.selling_price
         orders_product.update(buying_price: price, order_date: Time.now())
       end
       order.update(order_status: "ordered")
-      render json: "Your Order Placed Successfully "
+      render json: "Your Order Placed Successfully ", status: :ok
     end
   end
 
@@ -65,7 +59,7 @@ class OrdersController < ApplicationController
   
   def find_order_id
     order  = Order.find_by(user_id: current_user.id , order_status: "cart")
-    if order == nil
+    if order.?nil
       nil
     else
       order.id
@@ -98,7 +92,7 @@ class OrdersController < ApplicationController
         price: price, 
         total_price: price*quantity }
     end
-    render json: @products_array
+    render json: @products_array, status: :ok
   end
 
 end

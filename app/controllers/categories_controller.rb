@@ -3,7 +3,11 @@ class CategoriesController < ApplicationController
   
   def index
     @categories =  Category.all
-    render json: @categories
+    if @categories.empty?
+      render json: "No category found", status: :not_found
+    else
+      render json: @categories, status: :ok
+    end
   end
 
   def add_category
@@ -11,36 +15,37 @@ class CategoriesController < ApplicationController
     if category.save
       render json: category, status: :created
     else
-      render json: category.errors.full_messages
+      render json: category.errors.full_messages, status: :bad_request
     end
   end
 
   def show_category_products
-    if @category == nil
-      render json: "No category found"
+    byebug
+    if @category.nil?
+      render json: "Category doesn't exist" , status: :not_found
     else
       @category_products =  @category.product_details
-      render json: @category_products 
+      render json: @category_products , status: :ok
     end
   end
 
   def destroy 
-    @category.destroy
-    if @category.destroyed?
-      render json: "Deleted Successfully"
+    if @category.nil?
+      render json: "Failed to delete", status: :bad_request
     else
-      render json: "Failed to delete"
+      @category.destroy
+      render json: "Deleted Successfully" , status: :ok
     end
   end
 
   def update
-    if @category.update(category_params)
-      render json: "Category Updated Successfully"
+    if @category.nil?
+      render json: "failed to update category, category doesn't exist", status: :bad_request
     else
-      render json: "Failed to update category"
+      @category.update(category_params)
+      render json: "Category Updated Successfully", status: :ok
     end
   end
-
 
   private
 
