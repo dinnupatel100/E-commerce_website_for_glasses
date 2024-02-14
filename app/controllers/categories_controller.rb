@@ -20,12 +20,15 @@ class CategoriesController < ApplicationController
   end
 
   def show_category_products
-    byebug
     if @category.nil?
-      render json: "Category doesn't exist" , status: :not_found
+      render json: "Products doesn't exist for the category" , status: :not_found
     else
       @category_products =  @category.product_details
-      render json: @category_products , status: :ok
+      if @category_products.empty?
+        render json: "Product doesn't exist for the category", status: :not_found
+      else
+        render json: @category_products , status: :ok
+      end
     end
   end
 

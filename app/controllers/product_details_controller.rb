@@ -1,5 +1,5 @@
 class ProductDetailsController < ApplicationController
-  before_action :set_product_detail, only: [:image_of_product, :show, :destroy]
+  before_action :set_product_detail, only: [:show, :destroy]
 
   def index
     @product_details = ProductDetail.all
@@ -11,7 +11,7 @@ class ProductDetailsController < ApplicationController
   end
 
   def create
-    product_details = ProductDetail.new(product_detail_params.merge(category_id: params[:id]))
+    product_details = ProductDetail.new(product_detail_params)
     if product_details.save
       render json: product_details, status: :created
     else
@@ -24,12 +24,16 @@ class ProductDetailsController < ApplicationController
       render json: "Products doesn't exist", status: :not_found
     else
       @product_colors = @product_detail.product_colors.pluck(:color)
-      @product_size = @product_detail.product_colors.first.products.pluck(:size)
-      render json: {
-        product_detail: @product_detail,
-        product_colors: @product_colors,
-        product_size: @product_size
-      }, status: :ok
+      if @product_colors.empty?
+        render json: "Product colors doesn't exist", status: :not_found
+      else
+        @product_size = @product_detail.product_colors.first.products.pluck(:size)
+        render json: {
+          product_detail: @product_detail,
+          product_colors: @product_colors,
+          product_size: @product_size
+        }, status: :ok
+      end
     end
   end
 
@@ -51,7 +55,7 @@ class ProductDetailsController < ApplicationController
                                "%#{params[:keywords]}%", "%#{params[:keywords]}%", "#{@category.first.id}")
     end 
 
-    if @product.empty?
+    if @products.empty?
       render json: "Product doesn't exist", status: :not_found
     else
       render json: @products, status: :ok
@@ -62,7 +66,7 @@ class ProductDetailsController < ApplicationController
 
   def product_detail_params
     
-    params.require(:product_detail).permit(:product_name, :product_description, :cost_price, :selling_price, :brand)
+    params.require(:product_detail).permit(:product_name, :product_description, :cost_price, :selling_price, :brand, :category_id)
   end
 
   def set_product_detail

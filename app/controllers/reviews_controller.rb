@@ -3,7 +3,7 @@ class ReviewsController < ApplicationController
   def create
     review = Review.new(review_params.merge(user_id: current_user.id, product_detail_id: params[:id]))
     if review.save
-      render json: { message: "Review added successfully" }, status: :created
+      render json: { message: "Review added successfully", review: review }, status: :created
     else 
       render json: { message: "Failed to add Review" }, status: :bad_request
     end

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'user/data' ,   to: 'users#index'    
   put 'user/:id',     to: 'users#update'   
   get 'user/:id',     to: 'users#show'
+  delete 'user/:id',  to: 'users#destroy'
 
   #Category routes
   post 'category/add-category', to: 'categories#add_category'
@@ -20,7 +21,7 @@ Rails.application.routes.draw do
   get 'category/:id',  to: 'categories#show_category_products'
 
   #Product Details routes
-  post 'category/:id/product/add-product', to: 'product_details#create'
+  post 'product/add-product', to: 'product_details#create'
   get 'product/data', to: 'product_details#index'
   get 'product/:id', to: 'product_details#show'
   post 'product/search', to: 'product_details#search_result'
@@ -45,9 +46,6 @@ Rails.application.routes.draw do
   get "order/place-order/", to: 'orders#order_placed'
   get "order/product/:id/remove-product", to: 'orders#remove_product_from_cart'
   
-  #Orders_Product routes
-  get 'orders_product/data', to: "orders_products#index"
-
   # Defines the root path route ("/")
   # root "posts#index"
 end

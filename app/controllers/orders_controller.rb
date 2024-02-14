@@ -6,6 +6,7 @@ class OrdersController < ApplicationController
       render json: "Order doesn't exist", status: :not_found
     else
       render json: @order, status: :ok
+    end
   end
 
   def add_to_cart
@@ -16,6 +17,7 @@ class OrdersController < ApplicationController
     end
     OrdersProduct.create(order_id: order_id, product_id: params[:product_id], quantity: params[:quantity])
     update_cart_total_bill(order_id)
+    render json: "Product added to cart successfully", status: :created
   end
 
   def view_cart
@@ -59,7 +61,7 @@ class OrdersController < ApplicationController
   
   def find_order_id
     order  = Order.find_by(user_id: current_user.id , order_status: "cart")
-    if order.?nil
+    if order.nil?
       nil
     else
       order.id
