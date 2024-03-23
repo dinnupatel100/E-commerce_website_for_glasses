@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+  load_and_authorize_resource
 
   def index
     @order = Order.all
@@ -94,6 +95,7 @@ class OrdersController < ApplicationController
         price: price, 
         total_price: price*quantity }
     end
+    
     render json: @products_array, status: :ok
   end
 

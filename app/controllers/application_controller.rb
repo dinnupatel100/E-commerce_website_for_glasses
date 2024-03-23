@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   before_action :authorized
   rescue_from CanCan::AccessDenied, with: :handle_authorization
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  load_and_authorize_resource
+  # load_and_authorize_resource
 
   def encode_token(payload)
     JWT.encode(payload,Rails.application.credentials.secret_key_base)

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   skip_before_action :authorized, only: [:create, :login]
   before_action :set_users, only: [:show, :update, :destroy]
+  load_and_authorize_resource :except=> [:update, :destroy, :index]
 
   def index
     @users =  User.all
@@ -58,7 +59,8 @@ class UsersController < ApplicationController
       if user.authenticate(user_params[:password])
         @token = encode_token(user_id: user.id)
         render json: {
-            user: UserSerializer.new(user),
+            # user: UserSerializer.new(user),
+            message: "login successful",
             token: @token
         }, status: :accepted
       else

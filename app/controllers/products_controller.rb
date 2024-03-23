@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product_size, only: [:destroy]
+  load_and_authorize_resource
 
   def create
     product_size = Product.new(product_size_params.merge(product_color_id: params[:id]))

@@ -1,5 +1,6 @@
 class ProductDetailsController < ApplicationController
   before_action :set_product_detail, only: [:show, :destroy]
+  load_and_authorize_resource
 
   def index
     @product_details = ProductDetail.all

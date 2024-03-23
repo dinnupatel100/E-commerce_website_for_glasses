@@ -1,4 +1,5 @@
 class ProductColorsController < ApplicationController
+  load_and_authorize_resource
   before_action :set_product_color, only: [:destroy]
 
   def create
@@ -20,7 +21,7 @@ class ProductColorsController < ApplicationController
       render json: "Product color doesn't exist", status: :not_found
     else
       @product_color.destroy
-      render json: "Product color deleted successfully", status: :ok
+      render json: {message: "Product color deleted successfully"}, status: :ok
     end
   end
 
