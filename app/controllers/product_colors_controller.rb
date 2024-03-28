@@ -7,9 +7,9 @@ class ProductColorsController < ApplicationController
     if product.nil?
       product_color = ProductColor.new(product_color_params.merge(product_detail_id: params[:id]))
       if product_color.save
-        render json: product_color, status: :created
+        render json: {message: I18n.t("productcolor.productColorAddSuccess"), id: product_color.id}, status: :ok
       else
-        render json: product_color.errors.full_messages, status: :bad_request
+        render json: {error: product_color.errors.full_messages}, status: :bad_request
       end
     else
       render json: "Color #{params[:product_color][:color]} already added", status: :found
@@ -18,10 +18,10 @@ class ProductColorsController < ApplicationController
 
   def destroy
     if @product_color.nil?
-      render json: "Product color doesn't exist", status: :not_found
+      render json: {message: I18n.t("productcolor.productDeleteError")}, status: :not_found
     else
       @product_color.destroy
-      render json: {message: "Product color deleted successfully"}, status: :ok
+      render json: {message: I18n.t("productcolor.productDeleteSuccess")}, status: :ok
     end
   end
 

@@ -5,7 +5,10 @@ class CategoriesController < ApplicationController
   def index
     @categories =  Category.all
     if @categories.empty?
-      render json: "No category found", status: :not_found
+      render json: {
+        message: I18n.t("category.categoryEmpty"),
+        category: @categories
+        }, status: :ok
     else
       render json: @categories, status: :ok
     end
@@ -14,19 +17,24 @@ class CategoriesController < ApplicationController
   def add_category
     category = Category.new(category_params)
     if category.save
-      render json: category, status: :created
+      render json: {
+        message: I18n.t("category.categoryAddSuccess")
+      }, status: :ok
     else
-      render json: category.errors.full_messages, status: :bad_request
+      render json: {error: category.errors.full_messages}, status: :bad_request
     end
   end
 
   def show_category_products
     if @category.nil?
-      render json: "Products doesn't exist for the category" , status: :not_found
+      render json: { message: I18n.t("category.categoryNotExist")} , status: :bad_request
     else
       @category_products =  @category.product_details
       if @category_products.empty?
-        render json: "Product doesn't exist for the category", status: :not_found
+        render json: { 
+          message: I18n.t("category.showProductsError"),
+        products: @category_products
+        }, status: :not_found
       else
         render json: @category_products , status: :ok
       end
@@ -35,19 +43,19 @@ class CategoriesController < ApplicationController
 
   def destroy 
     if @category.nil?
-      render json: "Failed to delete", status: :bad_request
+      render json: {message: I18n.t("category.categoryNotExist")}, status: :bad_request
     else
       @category.destroy
-      render json: "Deleted Successfully" , status: :ok
+      render json: {message: I18n.t("category.deleteCategory")}, status: :ok
     end
   end
 
   def update
     if @category.nil?
-      render json: "failed to update category, category doesn't exist", status: :bad_request
+      render json: {message: I18n.t("category.categoryNotExist") }, status: :bad_request
     else
       @category.update(category_params)
-      render json: "Category Updated Successfully", status: :ok
+      render json: {message: I18n.t("category.categoryUpdateSuccess")}, status: :ok
     end
   end
 

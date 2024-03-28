@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   def index
     @order = Order.all
     if @order.empty?
-      render json: "Order doesn't exist", status: :not_found
+      render json: {message: I18n.t("order.empty")}, status: :not_found
     else
       render json: @order, status: :ok
     end
@@ -16,9 +16,9 @@ class OrdersController < ApplicationController
       Order.create(user_id: current_user.id , order_status: "cart", total_bill: 0.0)
       order_id = find_order_id
     end
-    OrdersProduct.create(order_id: order_id, product_id: params[:product_id], quantity: params[:quantity])
+    OrdersProduct.create(order_id: order_id, product_id: params[:product_size_id], quantity: params[:quantity])
     update_cart_total_bill(order_id)
-    render json: "Product added to cart successfully", status: :created
+    render json: {message: I18n.t("order.addtocart")}, status: :ok
   end
 
   def view_cart
@@ -31,15 +31,17 @@ class OrdersController < ApplicationController
   end
 
   def remove_product_from_cart
-    order_product = OrdersProduct.find_by(product_id: params[:id])
+    order = Order.find_by(user_id: current_user.id, order_status: "cart")
+    print("Removing product from cart ------------",order.id);
+    order_product = OrdersProduct.find_by(order_id: order.id, product_id: params[:productid])
     order_product.destroy
-    render json: "Product removed successfully"
+    render json: {message: I18n.t("order.removeSuccess")}, status: :ok
   end
 
   def order_placed
     order = Order.find_by(user_id: current_user.id, order_status: "cart")
     if order.nil?
-      render json: { message: "You have nothing in your cart to order" }, status: :not_found
+      render json: { message: I18n.t("order.placeOrderError") }, status: :not_found
     else
       order.orders_products.each do |orders_product|
         ordered_quantity = orders_product.quantity
@@ -54,7 +56,7 @@ class OrdersController < ApplicationController
         orders_product.update(buying_price: price, order_date: Time.now())
       end
       order.update(order_status: "ordered")
-      render json: "Your Order Placed Successfully ", status: :ok
+      render json: {message: I18n.t("order.placeOrderSuccess")} , status: :ok
     end
   end
 
@@ -71,7 +73,7 @@ class OrdersController < ApplicationController
 
   def update_cart_total_bill(order_id)
     order = Order.find_by(id: order_id)
-    price = Product.find_by(id: params[:product_id]).product_color.product_detail.selling_price
+    price = Product.find_by(id: params[:product_size_id]).product_color.product_detail.selling_price
     bill = (order.total_bill) + (price * params[:quantity])
     order.update(total_bill: bill)
   end

@@ -5,18 +5,18 @@ class ProductsController < ApplicationController
   def create
     product_size = Product.new(product_size_params.merge(product_color_id: params[:id]))
     if product_size.save
-      render json: product_size, status: :created
+      render json:{ message: I18n.t("productsize.addSuccess"),product_size_id: product_size.id}, status: :ok
     else
-      render json: product_size.errors.full_messages, status: :bad_request
+      render json: {errors: product_size.errors.full_messages}, status: :bad_request
     end
   end
 
   def destroy
     if @product_size.nil?
-      render json: "Product id doesn't exist", status: :bad_request
+      render json: {message: I18n.t("productsize.deleteFailure")}, status: :bad_request
     else
       @product_size.destroy
-      render json: "Product size deleted successfully", status: :ok
+      render json: {message: I18n.t("productsize.deleteSuccess")}, status: :ok
     end
   end
 

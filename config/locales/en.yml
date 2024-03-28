@@ -28,4 +28,50 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  user:
+    signinSuccess: "login successfully"
+    signinError: "Invalid email or  password"
+    signupSuccess: "User Created Successfully"
+    userUpdateError : "Failed to update user"
+    userUpdateSuccess : "User Updated Successfully"
+    noUser : "No Users"
+    userNotExist: "User doesn't exist"
+    deleteUser: "User Deleted Successfully"
+
+  category:
+    categoryEmpty: "Empty Category"
+    categoryAddSuccess: "Category Added Successfully"
+    categoryUpdateSuccess: "Category Updated Successfully"
+    deleteCategory: "Category Deleted Successfully"
+    categoryNotExist: "Category doesn't exist"
+    showProductsError: "Products doesn't exist for the category"
+
+  product:
+    productEmpty: "Empty Product"
+    addProductSuccess: "Product Added Successfully"
+    productNotExist: "Product doesn't exist"
+    productColorNotExist: "Product color not available"
+    deleteProductSuccess: "Product Deleted Successfully"
+
+  review:
+    reviewEmpty: "Empty Review"
+    reviewAddSuccess: "Review Added Successfully"
+    reviewAddFailure: "Failed to add Review"
+
+  productcolor:
+    productColorAddSuccess: "Product Color added successfully"
+    productDeleteError: "Product color doesn't exist"
+    productDeleteSuccess: "Product color deleted successfully"
+
+  productsize:
+    addSuccess: "Product Size added successfully"
+    deleteFailure: "Product id doesn't exist"
+    deleteSuccess: "Product size deleted successfully"
+
+  order:
+    empty: "Empty Order"
+    addSuccess: "Order Added Successfully"
+    addtocart: "Product added to cart successfully"
+    placeOrderError: "You have nothing in your cart to order"
+    placeOrderSuccess: "Your Order Placed Successfully"
+    removeSuccess: "Product removed successfully"

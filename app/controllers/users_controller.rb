@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   def index
     @users =  User.all
     if @users.empty?
-      render json: "no user found", status: :not_found
+      render json: { message: I18n.t("user.noUser") }, status: :ok
     else
       render json: @users , status: :ok
     end
@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
   def show
     if @user.nil?
-      render json: "no data", status: :ok
+      render json: {message:I18n.t("user.userNotExist")}, status: :ok
     else
       render json: @user, status: :ok
     end
@@ -22,12 +22,11 @@ class UsersController < ApplicationController
 
   def update
     if @user.nil?
-      render json: { message: "Failed to update user"}, status: :not_found
+      render json: { error: I18n.t("user.userUpdateError")}, status: :bad_request
     else
       @user.update(user_params)
       render json: {
-        message: "User Updated Successfully",
-        user: @user
+        message: I18n.t("user.userUpdateSuccess"),
       }, status: :ok
     end
   end
@@ -37,19 +36,21 @@ class UsersController < ApplicationController
     if user.save
       token = encode_token(user_id: user.id)
       render json: {
-        user: UserSerializer.new(user)
-      },status: :created
+        message: I18n.t("user.signupSuccess")
+      },status: :ok
     else
-      render json: user.errors.full_messages, status: :bad_request
+      render json:{
+        error: user.errors.full_messages
+        }, status: :bad_request
     end
   end
 
   def destroy
     if @user.nil?
-      render json: "Failed to delete user", status: :bad_request
+      render json: {error: I18n.t("user.userNotExist") }, status: :bad_request
     else
       @user.destroy
-      render json: "User Deleted Successfully", status: :ok
+      render json: {message: I18n.t("user.deleteUser")}, status: :ok
     end
   end
 
@@ -60,14 +61,14 @@ class UsersController < ApplicationController
         @token = encode_token(user_id: user.id)
         render json: {
             # user: UserSerializer.new(user),
-            message: "login successful",
+            message: I18n.t('user.signinSuccess'),
             token: @token
-        }, status: :accepted
+        }, status: :ok
       else
-        render json: {error: 'Invalid email or  password'}, status: :unauthorized
+        render json: {error: I18n.t("user.signinError")}, status: :bad_request
       end
     else
-      render json: {error: 'Invalid email or  password'}, status: :unauthorized
+      render json: {error: I18n.t("user.signinError")}, status: :bad_request
     end
   end
 

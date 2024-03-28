@@ -5,7 +5,7 @@ class ProductDetailsController < ApplicationController
   def index
     @product_details = ProductDetail.all
     if @product_details.empty?
-      render json: "No products found", status: :not_found
+      render json: {message: I18n.t("product.productEmpty")}, status: :not_found
     else
       render json: @product_details, status: :ok
     end
@@ -14,19 +14,23 @@ class ProductDetailsController < ApplicationController
   def create
     product_details = ProductDetail.new(product_detail_params)
     if product_details.save
-      render json: product_details, status: :created
+      render json: {message: I18n.t("product.addProductSuccess")}, status: :ok
     else
-      render json: product_details.errors.full_messages, status: :bad_request
+      render json: {errors: product_details.errors.full_messages}, status: :bad_request
     end
   end
 
   def show
     if @product_detail.nil?
-      render json: "Products doesn't exist", status: :not_found
+      render json: {
+        message: I18n.t("product.productNotExist")
+      } , status: :not_found
     else
       @product_colors = @product_detail.product_colors.pluck(:color)
       if @product_colors.empty?
-        render json: "Product colors doesn't exist", status: :not_found
+        render json: {
+          message: I18n.t("product.productColorNotExist")
+        }, status: :not_found
       else
         @product_size = @product_detail.product_colors.first.products.pluck(:size)
         render json: {
@@ -40,10 +44,14 @@ class ProductDetailsController < ApplicationController
 
   def destroy
     if @product_detail.nil?
-      render json: "product doesn't exist", status: :not_found
+      render json: {
+        message: I18n.t("product.productNotExist")
+      }, status: :not_found
     else
       @product_detail.destroy
-      render json: "Product details deleted successfully", status: :ok
+      render json: {
+        message: I18n.t("product.deleteProductSuccess")
+      }, status: :ok
     end
   end
 
@@ -57,7 +65,9 @@ class ProductDetailsController < ApplicationController
     end 
 
     if @products.empty?
-      render json: "Product doesn't exist", status: :not_found
+      render json: {
+        message: I18n.t("product.productNotExist")
+      }, status: :not_found
     else
       render json: @products, status: :ok
     end

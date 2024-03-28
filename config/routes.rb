@@ -6,45 +6,45 @@ Rails.application.routes.draw do
   # get "up" => "rails/health#show", as: :rails_health_check
   
   # User routes
-  post 'user/login',  to: 'users#login'
-  post 'user/signup', to: 'users#create'
-  get 'user/data' ,   to: 'users#index'    
-  put 'user/:id',     to: 'users#update'   
-  get 'user/:id',     to: 'users#show'
-  delete 'user/:id',  to: 'users#destroy'
+  post 'login',  to: 'users#login'
+  post 'signup', to: 'users#create'
+  get 'getallusers' ,   to: 'users#index'    
+  put 'updateuser/:id',     to: 'users#update'   
+  get 'getuser/:id',     to: 'users#show'
+  delete 'deleteuser/:id',  to: 'users#destroy'
 
   #Category routes
-  post 'category/add-category', to: 'categories#add_category'
-  get 'category/data', to: 'categories#index'
-  delete 'category/:id', to: 'categories#destroy'
-  put 'category/:id', to: 'categories#update'
-  get 'category/:id',  to: 'categories#show_category_products'
+  post 'addcategory', to: 'categories#add_category'
+  get 'getallcategories', to: 'categories#index'
+  delete 'deletecategory/:id', to: 'categories#destroy'
+  put 'updatecategory/:id', to: 'categories#update'
+  get 'getproductsbycategory/:id',  to: 'categories#show_category_products'
 
   #Product Details routes
-  post 'product/add-product', to: 'product_details#create'
-  get 'product/data', to: 'product_details#index'
-  get 'product/:id', to: 'product_details#show'
-  post 'product/search', to: 'product_details#search_result'
-  delete 'product/:id', to: 'product_details#destroy'
+  post 'addproduct', to: 'product_details#create'
+  get 'getallproducts', to: 'product_details#index'
+  get 'getproduct/:id', to: 'product_details#show'
+  get 'search', to: 'product_details#search_result'
+  delete 'deleteproduct/:id', to: 'product_details#destroy'
 
   #Product Colors routes
-  post 'product/:id/product-color/add-color', to: 'product_colors#create'
-  delete 'product/product-color/:id', to: 'product_colors#destroy'
-
+  post 'addproductcolor/:id', to: 'product_colors#create'
+  delete 'deleteproductcolor/:id', to: 'product_colors#destroy'
+  
   #Product size routes
-  post 'product/product-color/:id/product-size/add-size', to: 'products#create'
-  delete 'product/product-color/product-size/:id', to: 'products#destroy'
+  post 'addproductsize/:id', to: 'products#create'
+  delete 'deleteproductsize/:id', to: 'products#destroy'
 
   #Review routes
-  post 'product/:id/review/add-review', to: 'reviews#create'
-  get 'product/:id/reviews', to: 'reviews#show_product_reviews'
+  post 'addproductreview/:id', to: 'reviews#create'
+  get 'getproductreviews/:id', to: 'reviews#show_product_reviews'
 
   #Orders routes
-  get 'order/data', to:'orders#index'
-  post 'order/add-to-cart', to: 'orders#add_to_cart'
-  get 'order/view-cart', to: 'orders#view_cart'
-  get "order/place-order/", to: 'orders#order_placed'
-  get "order/product/:id/remove-product", to: 'orders#remove_product_from_cart'
+  get 'getallorders', to:'orders#index'
+  post 'addtocart', to: 'orders#add_to_cart'
+  get 'viewcart', to: 'orders#view_cart'
+  get "placeorder", to: 'orders#order_placed'
+  get "removeproduct/:productid", to: 'orders#remove_product_from_cart'
   
   # Defines the root path route ("/")
   # root "posts#index"
